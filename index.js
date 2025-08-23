@@ -83,7 +83,8 @@ app.get('/callback', async (req, res) => {
     const posts = postRes.data.elements.map(p => ({
       postId: p.id,
       activity: p.activity,
-      text: p.text?.text || ''
+      text: p.text?.text || '',
+      createdAt: p.created?.time ? new Date(p.created.time) : null
     }));
 
     // Connect to SQL and upsert posts
@@ -93,15 +94,16 @@ app.get('/callback', async (req, res) => {
         .input('postId', sql.VarChar, post.postId)
         .input('activity', sql.VarChar, post.activity)
         .input('text', sql.NVarChar(sql.MAX), post.text)
+        .input('createdAt', sql.DateTimeOffset, post.createdAt)
         .query(`
           MERGE LinkedInPosts AS target
-          USING (SELECT @postId AS postId, @activity AS activity, @text AS text) AS source
+          USING (SELECT @postId AS postId, @activity AS activity, @text AS text, @createdAt AS createdAt) AS source
           ON target.postId = source.postId
           WHEN MATCHED THEN 
-            UPDATE SET activity = source.activity, text = source.text
+            UPDATE SET activity = source.activity, text = source.text, createdAt = source.createdAt
           WHEN NOT MATCHED THEN
-            INSERT (postId, activity, text)
-            VALUES (source.postId, source.activity, source.text);
+            INSERT (postId, activity, text, createdAt)
+            VALUES (source.postId, source.activity, source.text, source.createdAt);
         `);
     }
 
