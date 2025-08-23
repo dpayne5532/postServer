@@ -1,1 +1,45 @@
+# Environment variables
 .env
+
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/
+
+# Azure deployment artifacts
+*.publishsettings
+*.azure*
+
+# Database dump or local cache
+*.bak
+*.sql
+*.sqlite
+
+# Misc build outputs (if any)
+dist/
+build/
+coverage/
+
+# IDE configs (optional)
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Local runtime data
+*.pid
+*.seed
+*.pid.lock
